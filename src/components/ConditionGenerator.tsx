@@ -3,10 +3,10 @@ import React, { useState,useRef } from 'react';
 type defaultType ={
     id:number,key:string,condition:string,inp:string|number
 }
-var condArr = [{id:1,key:'Title',condition:'==',inp:'abc'}]
+var condArr = [{id:1,key:'Title',condition:'Equals ( == )',inp:'abc'}]
 var keyArr:string[]=['Title','Quantity','Price','Brand']
-var strConditonArr:string[]=['==','!=','%Like%','!%Like%']
-var intConditionArr:string[]=['==','!=','<=','>=']
+var strConditonArr:string[]=['Equals ( == )','Not Equals ( != )','Contain (%LIKE%)','Not Contain (!%LIKE%)']
+var intConditionArr:string[]=['Equals ( == )','Not Equals ( != )','Less Than equals ( <= )','Greater than equals ( >= )']
 
 const ConditionGenerator = () => {
 
@@ -61,7 +61,10 @@ const ConditionGenerator = () => {
         let str=''
         let sign=(condition==='Any Condition')? ' || ':' && '
         conditions.map((item)=>{
-            str+=item.key+item.condition+item.inp+sign
+            var start = item.condition.indexOf('(')
+            var end = item.condition.indexOf(')')
+            var conditionStr = item.condition.substring(start+1,end)
+            str+=item.key+" "+conditionStr+" "+item.inp+sign
         })
         return str.substring(0,str.length-3)
     }
@@ -77,7 +80,7 @@ const ConditionGenerator = () => {
         </div>
         {conditions.map((item,i)=>{
             // renders the array on the basis of key
-            let arr=(item.key==='Title' || item.key==='Brand')?strConditonArr:intConditionArr
+            let arr=(item.key==='Title' || item.key==='Brand')?strConditonArr:intConditionArr;
             return (
             <div className='col-12 d-flex flex-row justify-content-center align-items-center'>
                 <select value={item.key} onChange={(e)=>{selectKey(e,i)}} ref={(ref)=>keyRefs.current[i]=ref} className='col-3 p-2 m-1 rounded shadow fs-6 border-3 border-primary'>
